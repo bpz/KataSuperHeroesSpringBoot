@@ -5,9 +5,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class SuperHeroStorage {
-
-  var superHeroes: MutableList<SuperHero> = mutableListOf(SuperHero(id = "1", name = "Wolverine"))
-  val defaultSuperHero: SuperHero = SuperHero(id = "1", name = "Wolverine")
+  private final val defaultSuperHero: SuperHero = SuperHero(id = "1", name = "Wolverine")
+  var superHeroes: MutableList<SuperHero> = mutableListOf(defaultSuperHero)
 
   fun getByName(name: String?): List<SuperHero> {
     return if (name != null) {
@@ -17,8 +16,8 @@ class SuperHeroStorage {
     }
   }
 
-  fun getById(superHeroId: String): SuperHero =
-    superHeroes.find { it.id == superHeroId } ?: defaultSuperHero
+  fun getById(superHeroId: String): SuperHero? =
+    superHeroes.find { it.id == superHeroId }
 
   fun add(newSuperHero: SuperHero): SuperHero {
     superHeroes.add(newSuperHero)

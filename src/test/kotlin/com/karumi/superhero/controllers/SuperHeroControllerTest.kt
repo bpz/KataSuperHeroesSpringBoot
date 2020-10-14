@@ -14,14 +14,15 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-class SuperHeroControllerTest(@Autowired val mockMvc: MockMvc) {
+class SuperHeroControllerTest(
+  @Autowired val mockMvc: MockMvc
+) {
 
   val ANY_SUPERHERO = SuperHero(id = "1", name = "Wolverine")
   val WRONG_NEW_SUPERHERO = "{}"
 
   @Test
   fun `should return the list of superheroes when contains superheroes`() {
-
     mockMvc.perform(MockMvcRequestBuilders
       .get("/superhero"))
 
@@ -31,7 +32,6 @@ class SuperHeroControllerTest(@Autowired val mockMvc: MockMvc) {
 
   @Test
   fun `should return the list of superheroes filters by name`() {
-
     mockMvc.perform(MockMvcRequestBuilders
       .get("/superhero?name=wol"))
 
@@ -46,6 +46,14 @@ class SuperHeroControllerTest(@Autowired val mockMvc: MockMvc) {
 
       .andExpect(status().isOk)
       .andExpect(content().json(ANY_SUPERHERO.toJson(), true))
+  }
+
+  @Test
+  fun `should return 404 if the id does not exist`() {
+    mockMvc.perform(MockMvcRequestBuilders
+      .get("/superhero/1000"))
+
+      .andExpect(status().isNotFound)
   }
 
   @Test
