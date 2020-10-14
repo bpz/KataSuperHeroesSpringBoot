@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @AutoConfigureMockMvc
 class SuperHeroControllerTest(@Autowired val mockMvc: MockMvc) {
 
-
   val ANY_SUPERHERO = SuperHero(id = "1", name = "Wolverine")
   val WRONG_NEW_SUPERHERO = "{}"
 
