@@ -3,27 +3,26 @@ package com.karumi.superhero.controllers
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.karumi.superhero.domain.model.SuperHero
 import org.junit.jupiter.api.Test
-import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@RunWith(SpringRunner::class)
-@WebMvcTest(SuperHeroController::class)
-class SuperHeroControllerTest(
-  @Autowired val mockMvc: MockMvc
-) {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@AutoConfigureMockMvc
+class SuperHeroControllerTest(@Autowired val mockMvc: MockMvc) {
+
 
   val ANY_SUPERHERO = SuperHero(id = "1", name = "Wolverine")
   val WRONG_NEW_SUPERHERO = "{}"
 
   @Test
   fun `should return the list of superheroes when contains superheroes`() {
+
     mockMvc.perform(MockMvcRequestBuilders
       .get("/superhero"))
 
@@ -33,6 +32,7 @@ class SuperHeroControllerTest(
 
   @Test
   fun `should return the list of superheroes filters by name`() {
+
     mockMvc.perform(MockMvcRequestBuilders
       .get("/superhero?name=wol"))
 
