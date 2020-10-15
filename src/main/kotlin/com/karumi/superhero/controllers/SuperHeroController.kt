@@ -6,7 +6,7 @@ import com.karumi.superhero.domain.model.SuperHero
 import com.karumi.superhero.usecases.SuperHeroUseCases
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.* // ktlint-disable no-wildcard-imports
 
 @RestController
 class SuperHeroController(
@@ -15,9 +15,9 @@ class SuperHeroController(
 
   @RequestMapping("/superhero")
   fun getSuperHeroesEndpoint(
-    @RequestParam(name = "name", required = false) name: String?):
+    @RequestParam(name = "name", required = false) name: String?
+  ):
     List<SuperHero> = superHeroUseCases.getSuperHeroByName(name)
-
 
   @RequestMapping("/superhero/{id}")
   fun getSuperHeroByIdEndpoint(@PathVariable("id") superHeroId: String): SuperHero =
