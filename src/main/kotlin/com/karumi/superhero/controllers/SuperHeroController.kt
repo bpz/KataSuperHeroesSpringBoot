@@ -3,6 +3,7 @@ package com.karumi.superhero.controllers
 import com.karumi.superhero.controllers.exceptions.NotFound
 import com.karumi.superhero.data.SuperHeroStorage
 import com.karumi.superhero.domain.model.SuperHero
+import com.karumi.superhero.controllers.model.SuperHeroModel
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -34,6 +35,6 @@ class SuperHeroController(
     superHeroStorage.getSuperHero(superHeroId) ?: throw NotFound
 
   @PostMapping("/superhero")
-  fun postSuperHeroEndpoint(@RequestBody newSuperHero: SuperHero) =
-    ResponseEntity(superHeroStorage.addSuperHero(newSuperHero), HttpStatus.CREATED)
+  fun postSuperHeroEndpoint(@RequestBody newSuperHeroModel: SuperHeroModel) =
+    ResponseEntity(superHeroStorage.addSuperHero(newSuperHeroModel), HttpStatus.CREATED)
 }
