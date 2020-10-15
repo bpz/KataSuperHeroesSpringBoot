@@ -22,4 +22,10 @@ class SuperHeroStorage(
   }
 
   fun getAll(): List<SuperHero> = superheroes.values.toList()
+
+  fun reset() {
+    superheroes.clear()
+    newId = 1
+    add(SuperHeroModel("Wolverine"))
+  }
 }

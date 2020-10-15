@@ -6,6 +6,7 @@ import com.karumi.superhero.data.SuperHeroStorage
 import com.karumi.superhero.domain.model.SuperHero
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import org.junit.Before
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -29,6 +30,11 @@ class SuperHeroControllerTest(
   val NEW_SUPERHERO_MODEL: SuperHeroModel = SuperHeroModel("Cyclops")
   val NEW_SUPERHERO: SuperHero = SuperHero("2", "Cyclops")
   val WRONG_NEW_SUPERHERO_MODEL = "{}"
+
+  @Before
+  fun resetStorage() {
+    superHeroStorage.reset()
+  }
 
   @Test
   fun `should return the list of superheroes when contains superheroes`() {
