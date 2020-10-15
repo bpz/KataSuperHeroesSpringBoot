@@ -3,18 +3,17 @@ package com.karumi.superhero.controllers
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.karumi.superhero.domain.model.SuperHero
 import org.junit.jupiter.api.Test
-import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@RunWith(SpringRunner::class)
-@WebMvcTest(SuperHeroController::class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@AutoConfigureMockMvc
 class SuperHeroControllerTest(
   @Autowired val mockMvc: MockMvc
 ) {
@@ -47,6 +46,14 @@ class SuperHeroControllerTest(
 
       .andExpect(status().isOk)
       .andExpect(content().json(ANY_SUPERHERO.toJson(), true))
+  }
+
+  @Test
+  fun `should return 404 if the id does not exist`() {
+    mockMvc.perform(MockMvcRequestBuilders
+      .get("/superhero/1000"))
+
+      .andExpect(status().isNotFound)
   }
 
   @Test

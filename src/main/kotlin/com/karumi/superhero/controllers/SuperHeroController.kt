@@ -1,35 +1,26 @@
 package com.karumi.superhero.controllers
 
+import com.karumi.superhero.controllers.common.NotFound
 import com.karumi.superhero.domain.model.SuperHero
+import com.karumi.superhero.storage.SuperHeroStorage
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
-class SuperHeroController {
+class SuperHeroController(val superHeroStorage: SuperHeroStorage) {
 
   @RequestMapping("/superhero")
   fun getSuperHeroesEndpoint(
     @RequestParam(name = "name", required = false) name: String?
-  ): List<SuperHero> {
-    val superheroes = listOf(SuperHero(id = "1", name = "Wolverine"))
-    return if (name != null) {
-      superheroes.filter { it.name.contains(name, ignoreCase = true) }
-    } else {
-      superheroes
-    }
-  }
+  ): List<SuperHero> =
+    superHeroStorage.getByName(name)
 
   @RequestMapping("/superhero/{id}")
-  fun getSuperHeroByIdEndpoint(@PathVariable("id") superHeroId: String): SuperHero =
-    SuperHero(id = superHeroId, name = "Wolverine")
+  fun getSuperHeroByIdEndpoint(@PathVariable("id") superHeroId: String) =
+    superHeroStorage.getById(superHeroId) ?: throw NotFound
 
   @PostMapping("/superhero")
   fun postSuperHeroEndpoint(@RequestBody newSuperHero: SuperHero) =
-    ResponseEntity(newSuperHero, HttpStatus.CREATED)
+    ResponseEntity(superHeroStorage.add(newSuperHero), HttpStatus.CREATED)
 }
