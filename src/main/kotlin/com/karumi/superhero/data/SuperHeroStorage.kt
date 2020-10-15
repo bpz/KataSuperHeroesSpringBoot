@@ -2,9 +2,9 @@ package com.karumi.superhero.data
 
 import com.karumi.superhero.controllers.model.SuperHeroModel
 import com.karumi.superhero.domain.model.SuperHero
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 
-@Component
+@Repository
 class SuperHeroStorage(
   private val superheroes: MutableMap<String, SuperHero> =
     mutableMapOf("1" to SuperHero(id = "1", name = "Wolverine"))
@@ -12,9 +12,9 @@ class SuperHeroStorage(
 
   private var newId = 1
 
-  fun getSuperHero(id: String): SuperHero? = superheroes[id]
+  fun get(id: String): SuperHero? = superheroes[id]
 
-  fun addSuperHero(model: SuperHeroModel): SuperHero {
+  fun add(model: SuperHeroModel): SuperHero {
     val newSuperHero = SuperHero(newId.toString(), model.name, model.photo)
     superheroes[newSuperHero.id] = newSuperHero
     newId++

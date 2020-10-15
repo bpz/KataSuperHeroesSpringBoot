@@ -1,40 +1,29 @@
 package com.karumi.superhero.controllers
 
 import com.karumi.superhero.controllers.exceptions.NotFound
-import com.karumi.superhero.data.SuperHeroStorage
-import com.karumi.superhero.domain.model.SuperHero
 import com.karumi.superhero.controllers.model.SuperHeroModel
+import com.karumi.superhero.domain.model.SuperHero
+import com.karumi.superhero.usecases.SuperHeroUseCases
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class SuperHeroController(
-  val superHeroStorage: SuperHeroStorage
+  val superHeroUseCases: SuperHeroUseCases
 ) {
 
   @RequestMapping("/superhero")
   fun getSuperHeroesEndpoint(
-    @RequestParam(name = "name", required = false) name: String?
-  ): List<SuperHero> {
-    val superheroes = superHeroStorage.getAll()
-    return if (name != null) {
-      superheroes.filter { it.name.contains(name, ignoreCase = true) }
-    } else {
-      superheroes
-    }
-  }
+    @RequestParam(name = "name", required = false) name: String?):
+    List<SuperHero> = superHeroUseCases.getSuperHeroByName(name)
+
 
   @RequestMapping("/superhero/{id}")
   fun getSuperHeroByIdEndpoint(@PathVariable("id") superHeroId: String): SuperHero =
-    superHeroStorage.getSuperHero(superHeroId) ?: throw NotFound
+    superHeroUseCases.getSuperHero(superHeroId) ?: throw NotFound
 
   @PostMapping("/superhero")
   fun postSuperHeroEndpoint(@RequestBody newSuperHeroModel: SuperHeroModel) =
-    ResponseEntity(superHeroStorage.addSuperHero(newSuperHeroModel), HttpStatus.CREATED)
+    ResponseEntity(superHeroUseCases.addSuperHero(newSuperHeroModel), HttpStatus.CREATED)
 }
