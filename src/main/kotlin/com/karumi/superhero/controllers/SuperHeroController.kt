@@ -1,6 +1,6 @@
 package com.karumi.superhero.controllers
 
-import com.karumi.superhero.controllers.errors.NotFound
+import com.karumi.superhero.controllers.common.NotFound
 import com.karumi.superhero.domain.model.SuperHero
 import com.karumi.superhero.storage.SuperHeroStorage
 import org.springframework.http.HttpStatus
@@ -18,7 +18,7 @@ class SuperHeroController(val superHeroStorage: SuperHeroStorage) {
 
   @RequestMapping("/superhero/{id}")
   fun getSuperHeroByIdEndpoint(@PathVariable("id") superHeroId: String) =
-    superHeroStorage.getById(superHeroId) ?: NotFound
+    superHeroStorage.getById(superHeroId) ?: throw NotFound
 
   @PostMapping("/superhero")
   fun postSuperHeroEndpoint(@RequestBody newSuperHero: SuperHero) =
