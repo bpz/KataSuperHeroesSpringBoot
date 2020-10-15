@@ -1,7 +1,11 @@
 package com.karumi.superhero.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.karumi.superhero.controllers.model.SuperHeroModel
+import com.karumi.superhero.data.SuperHeroStorage
 import com.karumi.superhero.domain.model.SuperHero
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -18,11 +22,18 @@ class SuperHeroControllerTest(
   @Autowired val mockMvc: MockMvc
 ) {
 
+  @MockkBean
+  lateinit var superHeroStorage: SuperHeroStorage
+
   val ANY_SUPERHERO = SuperHero(id = "1", name = "Wolverine")
-  val WRONG_NEW_SUPERHERO = "{}"
+  val NEW_SUPERHERO_MODEL: SuperHeroModel = SuperHeroModel("Cyclops")
+  val NEW_SUPERHERO: SuperHero = SuperHero("2", "Cyclops")
+  val WRONG_NEW_SUPERHERO_MODEL = "{}"
 
   @Test
   fun `should return the list of superheroes when contains superheroes`() {
+    every { superHeroStorage.getAll() } returns listOf(ANY_SUPERHERO)
+
     mockMvc.perform(MockMvcRequestBuilders
       .get("/superhero"))
 
@@ -32,6 +43,8 @@ class SuperHeroControllerTest(
 
   @Test
   fun `should return the list of superheroes filters by name`() {
+    every { superHeroStorage.getAll() } returns listOf(ANY_SUPERHERO)
+
     mockMvc.perform(MockMvcRequestBuilders
       .get("/superhero?name=wol"))
 
@@ -41,6 +54,8 @@ class SuperHeroControllerTest(
 
   @Test
   fun `should return a superhero if the id exist`() {
+    every { superHeroStorage.get(ANY_SUPERHERO.id) } returns ANY_SUPERHERO
+
     mockMvc.perform(MockMvcRequestBuilders
       .get("/superhero/1"))
 
@@ -50,13 +65,15 @@ class SuperHeroControllerTest(
 
   @Test
   fun `should return the superhero created if the values are correct`() {
+    every { superHeroStorage.add(any()) } returns NEW_SUPERHERO
+
     mockMvc.perform(MockMvcRequestBuilders
       .post("/superhero")
       .contentType(MediaType.APPLICATION_JSON_UTF8)
-      .content(ANY_SUPERHERO.toJson()))
+      .content(NEW_SUPERHERO_MODEL.toJson()))
 
       .andExpect(status().isCreated)
-      .andExpect(content().json(ANY_SUPERHERO.toJson(), true))
+      .andExpect(content().json(NEW_SUPERHERO.toJson(), true))
   }
 
   @Test
@@ -64,7 +81,7 @@ class SuperHeroControllerTest(
     mockMvc.perform(MockMvcRequestBuilders
       .post("/superhero")
       .contentType(MediaType.APPLICATION_JSON_UTF8)
-      .content(WRONG_NEW_SUPERHERO))
+      .content(WRONG_NEW_SUPERHERO_MODEL))
 
       .andExpect(status().isUnprocessableEntity)
   }

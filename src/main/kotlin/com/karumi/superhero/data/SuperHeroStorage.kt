@@ -10,7 +10,7 @@ class SuperHeroStorage(
     mutableMapOf("1" to SuperHero(id = "1", name = "Wolverine"))
 ) {
 
-  private var newId = 1
+  private var newId = 2
 
   fun get(id: String): SuperHero? = superheroes[id]
 
